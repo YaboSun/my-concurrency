@@ -1,13 +1,17 @@
-package com.ybsun.myconcurrency;
+package com.ybsun.myconcurrency.examples.count;
 
-import com.ybsun.myconcurrency.annotations.NotThreadSafe;
+import com.ybsun.myconcurrency.annotations.ThreadSafe;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.concurrent.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicInteger;
 
-@NotThreadSafe
+@ThreadSafe
 @Slf4j
-public class ConcurrencyTest {
+public class AtomicCountTest2 {
 
     // 总用户请求数
     private static int clientTotal = 50000;
@@ -16,7 +20,7 @@ public class ConcurrencyTest {
     private static int threadTotal = 200;
 
     // 统计最终count值
-    private static int count = 0;
+    private static AtomicInteger count = new AtomicInteger(0);
 
     public static void main(String[] args) throws Exception {
 
@@ -39,11 +43,16 @@ public class ConcurrencyTest {
         }
 
         countDownLatch.await();
-        System.out.println("count:" + count);
         executorService.shutdown();
+        System.out.println("count:" + count.get());
     }
 
     private static void add() {
-        count++;
+        count.getAndIncrement();
+        // 区别类似 i++ 和 ++i ？
+        // count.incrementAndGet();
+
+        // 与上面其实调用相同的 api ，只不过一个可以指定每次增加的数
+        // count.getAndAdd(1);
     }
 }
