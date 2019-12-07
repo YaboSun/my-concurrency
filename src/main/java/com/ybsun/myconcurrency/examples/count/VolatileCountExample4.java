@@ -8,18 +8,27 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 
+/**
+ * @author ybsun
+ */
 @NotThreadSafe
 @Slf4j
 public class VolatileCountExample4 {
 
-    // 总用户请求数
+    /**
+     * 总用户请求数
+     */
     private static int clientTotal = 50000;
 
-    // 总并发数
+    /**
+     * 总并发数
+     */
     private static int threadTotal = 200;
 
-    // 统计最终count值
-    private static volatile int count = 0;
+    /**
+     * 统计最终count值
+     */
+    private volatile static int count = 0;
 
     public static void main(String[] args) throws Exception {
 
