@@ -1,27 +1,31 @@
-package com.ybsun.myconcurrency.examples.count;
+package com.ybsun.myconcurrency.examples.lock;
 
-import com.ybsun.myconcurrency.annotations.ThreadSafe;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author Sun
+ * @date 2019/12/9 20:43
  */
 @Slf4j
-@ThreadSafe
-public class SyncCountExample3 {
+public class LockExample1 {
 
-    private static final int clientTotal = 50000;
 
-    private static final int threadTotal = 200;
+    private final static int clientTotal = 50000;
+
+    private final static int threadTotal = 200;
 
     private static Semaphore semaphore = new Semaphore(threadTotal);
 
     private static CountDownLatch countDownLatch = new CountDownLatch(clientTotal);
+
+    private final static Lock LOCK = new ReentrantLock();
 
     private static int count = 0;
 
@@ -46,7 +50,13 @@ public class SyncCountExample3 {
         executorService.shutdown();
     }
 
-    private static synchronized void add() {
-        count++;
+    private static void add() {
+        LOCK.lock();
+        try {
+            count++;
+        } finally {
+            LOCK.unlock();
+        }
+
     }
 }
