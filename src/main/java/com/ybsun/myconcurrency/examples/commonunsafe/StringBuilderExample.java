@@ -1,11 +1,9 @@
 package com.ybsun.myconcurrency.examples.commonunsafe;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.*;
 
 /**
  * @author Sun
@@ -13,7 +11,7 @@ import java.util.concurrent.Semaphore;
  */
 
 @Slf4j
-public class UnsafeExample1 {
+public class StringBuilderExample {
 
     private static StringBuilder stringBuilder = new StringBuilder();
 
@@ -25,8 +23,10 @@ public class UnsafeExample1 {
 
         Semaphore semaphore = new Semaphore(threadLocal);
 
-        ExecutorService executorService = Executors.newCachedThreadPool();
-
+        ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("thread-call-runner-%d")
+                .build();
+        ExecutorService executorService = new ThreadPoolExecutor(threadLocal, threadLocal, 0L,
+                TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), namedThreadFactory);
         for (int i = 0; i < clientTotal; i++) {
             executorService.execute(() -> {
                 try {

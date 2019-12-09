@@ -3,7 +3,10 @@ package com.ybsun.myconcurrency.examples.count;
 import com.ybsun.myconcurrency.annotations.NotThreadSafe;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.concurrent.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 
 @NotThreadSafe
 @Slf4j
@@ -41,6 +44,7 @@ public class UnsafeCountExample1 {
         countDownLatch.await();
         executorService.shutdown();
         System.out.println("count:" + count);
+
     }
 
     private static void add() {
